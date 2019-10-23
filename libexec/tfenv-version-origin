@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Summary: Explain how the current Terraform version is set
+set -e
+[ -n "$TFENV_DEBUG" ] && set -x
+
+unset TFENV_VERSION_ORIGIN
+
+OLDIFS="$IFS"
+IFS=$'\n' scripts=(`tfenv-hooks version-origin`)
+IFS="$OLDIFS"
+for script in "${scripts[@]}"; do
+  source "$script"
+done
+
+if [ -n "$TFENV_VERSION_ORIGIN" ]; then
+  echo "$TFENV_VERSION_ORIGIN"
+elif [ -n "$TFENV_VERSION" ]; then
+  echo "TFENV_VERSION environment variable"
+else
+  tfenv-version-file
+fi
